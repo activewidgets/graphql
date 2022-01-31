@@ -1,0 +1,63 @@
+{
+  "name": "@activewidgets/graphql",
+  "version": "0.0.1",
+  "description": "ActiveWidgets GraphQL integration",
+  "author": "ActiveWidgets SARL",
+  "license": "MIT",
+  "main": "./dist/graphql.js",
+  "module": "./dist/esm/graphql.js",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "npm run lint && rimraf dist/* && rollup -c",
+    "lint": "eslint **/*.js -f unix",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "graphql": "*"
+  },
+"devDependencies": {
+    "@babel/core": "^7",
+    "@babel/preset-env": "^7",
+    "@rollup/plugin-babel": "^5",
+    "@rollup/plugin-node-resolve": "^13",
+    "eslint": "^8",
+    "rimraf": "^3",
+    "rollup": "^2",
+    "rollup-plugin-terser": "^7"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    },
+    "globals": {
+      "Promise": true
+    },
+    "rules": {
+      "no-prototype-builtins": "off"
+    },
+    "env": {
+      "browser": true
+    }
+  },
+  "eslintIgnore": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/activewidgets/graphql.git"
+  },
+  "keywords": [
+    "datagrid",
+    "graphql"
+  ],
+  "bugs": {
+    "url": "https://github.com/activewidgets/graphql/issues"
+  },
+  "homepage": "https://github.com/activewidgets/graphql#readme"
+}
