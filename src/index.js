@@ -27,12 +27,8 @@ function plugin({props, assign}, serviceURL, fetchConfig){
 
 
     function processResponse(res){
-        return callbacks.response(res).then(({data, errors}) => {
-            if (errors){
-                throw new Error(errors); // ????
-            }
-            return convertData(data);
-        });
+        let throwErr = errors => {throw new Error(errors.map(e => e.message).join('\n'))};
+        return callbacks.response(res).then(({data, errors}) => errors ? throwErr(errors) : convertData(data));
     }
 
 
