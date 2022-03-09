@@ -9,7 +9,7 @@ function operation(query, op, send){
 
     let operationName = op.name && op.name.value,
         vars = op.variableDefinitions,
-        required = vars.filter(v => v.kind === 'NonNullType').map(v => v.type.name.value);
+        required = vars.filter(v => v.type.kind === 'NonNullType').map(v => v.variable.name.value);
 
     if (required.length === 0 && vars.length === 0){
         return () => send(query, null, operationName);
@@ -21,7 +21,7 @@ function operation(query, op, send){
 
     return (...args) => {
         let variables = Object.assign({}, args[required.length], ...required.map((name, i) => ({[name]: args[i]})));
-        send(query, variables, operationName);
+        return send(query, variables, operationName);
     };
 }
 
