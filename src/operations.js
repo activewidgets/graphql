@@ -5,7 +5,7 @@
  */
 
 
-function operation(query, op, send){
+function operation(query, op, send, convert){
 
     let operationName = op.name && op.name.value,
         vars = op.variableDefinitions,
@@ -16,17 +16,18 @@ function operation(query, op, send){
     }
 
     if (required.length === 0 && vars.length === 1){
-        return (variables) => send(query, variables, operationName);
+        return (variables) => send(query, convert(variables), operationName);
     }
 
-    return (...args) => {
-        let variables = Object.assign({}, args[required.length], ...required.map((name, i) => ({[name]: args[i]})));
+    return (first, ...rest) => {
+        let args = [first, ...rest],
+            variables = Object.assign({}, convert(args[required.length]), ...required.map((name, i) => ({[name]: args[i]})));
         return send(query, variables, operationName);
     };
 }
 
 
-export function defineOperations(query, send){
+export function defineOperations(query, send, convert){
         
     if (typeof query == 'string'){
         return () => send(query);
@@ -35,10 +36,10 @@ export function defineOperations(query, send){
     let defs = query.definitions.filter(def => def.operation);
 
     if (defs.length == 1) {
-        return operation(query, defs[0], send);
+        return operation(query, defs[0], send, convert);
     }
 
     let ops = {};
-    defs.forEach(op => {ops[op.name.value] = operation(query, op, send)});
+    defs.forEach(op => {ops[op.name.value] = operation(query, op, send, convert)});
     return ops;
 }    

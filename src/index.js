@@ -32,14 +32,33 @@ function plugin({props, assign}, serviceURL, fetchConfig){
     }
 
 
-    function convertData(data){
+    function convertParams(params){
 
-        while (data && typeof data.from == 'object'){
-            data = data.from;
+        if (typeof params !== 'object'){
+            return params;
         }
 
-        if (data && typeof data.return != 'undefined'){
-            data = data.return;
+        let obj = assign(...callbacks.params.map(fn => fn(params))),
+            result = {};
+
+        Object.keys(obj).forEach(i => {
+            if (typeof obj[i] != 'undefined'){
+                result[i] = obj[i];
+            }
+        })
+    
+        return result;
+    }
+
+
+    function convertData(data){
+
+        while (data && typeof data._from == 'object'){
+            data = data._from;
+        }
+
+        if (data && typeof data._return != 'undefined'){
+            data = data._return;
         }
         else {
             return null; // ???
@@ -89,10 +108,10 @@ function plugin({props, assign}, serviceURL, fetchConfig){
             return simpleQuery(input);
         }
         if (typeof input == 'string'){
-            return defineOperations(parseGraphql(input), send);
+            return defineOperations(parseGraphql(input), send, convertParams);
         }
         if (typeof input == 'object' && input && input.kind === 'Document'){
-            return defineOperations(input, send);
+            return defineOperations(input, send, convertParams);
         }
     });
 }
