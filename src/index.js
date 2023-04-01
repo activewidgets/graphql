@@ -13,10 +13,9 @@ const defaultHeaders = {
     'Content-Type': 'application/json'
 };
 
+const {assign} = Object;
 
-function plugin({props, assign}, serviceURL, fetchConfig){
-
-    let {api, callbacks} = props();
+function plugin({api, callbacks}, serviceURL, fetchConfig){
 
 
     function sendRequest(data){
